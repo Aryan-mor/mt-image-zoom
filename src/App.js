@@ -2,13 +2,14 @@ import React, {useEffect, useRef} from "react";
 import {FileDrop} from 'react-file-drop';
 import {Box, Button, Dialog, getSafe, gLog, Tooltip, Typography, useState} from "material-ui-helper";
 import './App.css';
-import {cyan, grey, red,orange} from "@material-ui/core/colors";
+import {cyan, grey, red, orange, teal} from "@material-ui/core/colors";
 import {Fab, useTheme, Zoom} from "@material-ui/core";
-import {Delete, ImageSearch,Search} from "@material-ui/icons";
+import {Delete, ImageSearch, Search,RadioButtonUnchecked,CheckBoxOutlineBlank} from "@material-ui/icons";
 import Magnifier from "react-magnifier";
 
 const ZOOM_LOCAL_KEY = "zoom-local-storage"
 const MG_ZOOM_LOCAL_KEY = "mg-zoom-local-storage"
+const MG_SHAPE_LOCAL_KEY = "mg-shape-local-storage"
 
 function App() {
     const theme = useTheme()
@@ -26,6 +27,12 @@ function App() {
             return parseInt(z)
         throw ""
     }, 150));
+    const [mgShape, setMgShape] = useState(getSafe(() => {
+        const shape = window.localStorage.getItem(MG_SHAPE_LOCAL_KEY);
+        if (shape)
+            return shape
+        throw ""
+    }, "circle"));
     const fileInputRef = useRef(null);
     const onFileChange = (files) => {
         gLog("onFileChange ", files)
@@ -65,6 +72,23 @@ function App() {
                     right: theme.spacing(2),
                     bottom: theme.spacing(2)
                 }}>
+
+                    <Tooltip title={`Cahnge shape to ${mgShape === "circle" ? "square" : "circle"}`}>
+                        <Fab
+                            onClick={() => {
+                                const newShape =  mgShape === "circle" ? "square" : "circle"
+                                setMgShape(newShape)
+                                window.localStorage.setItem(ZOOM_LOCAL_KEY, newShape);
+                            }} style={{
+                            backgroundColor: teal[300],
+                        }}>
+                            {
+                                mgShape !== "circle" ?
+                                    <RadioButtonUnchecked style={{color: "#fff"}}/>
+                                    : <CheckBoxOutlineBlank style={{color: "#fff"}}/>
+                            }
+                        </Fab>
+                    </Tooltip>
                     <ChangeMgZoom mgZoom={mgZoom} onChange={setMgZoom}/>
                     <ChangeZoom zoom={zoom} onChange={setZoom}/>
                     <Zoom
@@ -89,7 +113,7 @@ function App() {
                     onChange={(event) => {
                         onFileChange(event.target.files);
                     }}/>
-                <Images zoom={zoom} mgZoom={mgZoom} files={files}/>
+                <Images zoom={zoom} mgZoom={mgZoom} mgShape={mgShape} files={files}/>
             </Box>
             <FileDrop
                 onFrameDragEnter={(event) => console.log('onFrameDragEnter', event)}
@@ -113,7 +137,7 @@ function App() {
 
 const sizes = ["50%", "100%", 300, 800, 1200, undefined]
 
-function Images({files,mgZoom, zoom}) {
+function Images({files, mgZoom,mgShape, zoom}) {
     const [src, setSrc] = useState()
 
     useEffect(() => {
@@ -151,6 +175,7 @@ function Images({files,mgZoom, zoom}) {
                         <Magnifier
                             mgWidth={mgZoom}
                             mgHeight={mgZoom}
+                            mgShape={mgShape}
                             zoomFactor={zoom} src={src} width={size}/>
                         <Typography pt={0.5} variant={"h6"}>
                             {size}
