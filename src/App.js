@@ -275,7 +275,7 @@ function ChangeMgZoom({mgZoom, onChange}) {
                     </Box>
                 </Fab>
             </Tooltip>
-            <Dialog maxWidth={"md"} open={open} onClose={() => setOpen(false)}>
+            <Dialog maxWidth={"md"} open={open} onBackdropClick={() => setOpen(false)}>
                 <Box width={1} flexWrap={"wrap"}>
                     <Box width={1} py={2} px={1}>
                         <Typography variant={"h5"}>
