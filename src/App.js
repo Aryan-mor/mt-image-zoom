@@ -4,7 +4,7 @@ import {Box, Button, Dialog, getSafe, gLog, Tooltip, Typography, useState} from 
 import './App.css';
 import {cyan, grey, red, orange, teal} from "@material-ui/core/colors";
 import {Fab, useTheme, Zoom} from "@material-ui/core";
-import {Delete, ImageSearch, Search,RadioButtonUnchecked,CheckBoxOutlineBlank} from "@material-ui/icons";
+import {Delete, ImageSearch, Search, RadioButtonUnchecked, CheckBoxOutlineBlank} from "@material-ui/icons";
 import Magnifier from "react-magnifier";
 
 const ZOOM_LOCAL_KEY = "zoom-local-storage"
@@ -76,7 +76,7 @@ function App() {
                     <Tooltip title={`Cahnge shape to ${mgShape === "circle" ? "square" : "circle"}`}>
                         <Fab
                             onClick={() => {
-                                const newShape =  mgShape === "circle" ? "square" : "circle"
+                                const newShape = mgShape === "circle" ? "square" : "circle"
                                 setMgShape(newShape)
                                 window.localStorage.setItem(ZOOM_LOCAL_KEY, newShape);
                             }} style={{
@@ -137,7 +137,7 @@ function App() {
 
 const sizes = ["50%", "100%", 300, 800, 1200, undefined]
 
-function Images({files, mgZoom,mgShape, zoom}) {
+function Images({files, mgZoom, mgShape, zoom}) {
     const [src, setSrc] = useState()
 
     useEffect(() => {
@@ -173,10 +173,11 @@ function Images({files, mgZoom,mgShape, zoom}) {
                 sizes.map(size => (
                     <Box key={size} mt={2} flexDirectionColumn={true}>
                         <Magnifier
-                            mgWidth={mgZoom}
-                            mgHeight={mgZoom}
+                            mgWidth={mgZoom < mgZooms[0] ? mgZooms[0] : mgZoom}
+                            mgHeight={mgZoom < mgZooms[0] ? mgZooms[0] : mgZoom}
                             mgShape={mgShape}
-                            zoomFactor={zoom} src={src} width={size}/>
+                            zoomFactor={zoom < zooms[0] ? zooms[0] : zoom}
+                            src={src} width={size}/>
                         <Typography pt={0.5} variant={"h6"}>
                             {size}
                         </Typography>
@@ -268,7 +269,7 @@ function ChangeZoom({zoom, onChange}) {
     )
 }
 
-const mgSize = [
+const mgZooms = [
     50,
     100,
     150,
@@ -308,7 +309,7 @@ function ChangeMgZoom({mgZoom, onChange}) {
                         </Typography>
                     </Box>
                     {
-                        mgSize.map(it => {
+                        mgZooms.map(it => {
                             const active = mgZoom === it
                             return (
                                 <Box p={1} key={it}>
