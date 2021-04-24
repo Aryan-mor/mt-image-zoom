@@ -1,7 +1,8 @@
 {
   "name": "mt-image-zoom",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
+  "homepage": "https://aryan-mor.github.io/mt-image-zoom",
   "dependencies": {
     "@material-ui/core": "^4.9.5",
     "@material-ui/icons": "^4.9.1",
@@ -10,15 +11,18 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "react-magnifier": "latest",
-    "react-file-drop": "latest",
+    "gh-pages": "^3.1.0",
     "material-ui-helper": "^1.0.138",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-file-drop": "latest",
+    "react-magnifier": "latest",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
+    "predeploy": "npm run build",
+     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
