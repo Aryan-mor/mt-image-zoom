@@ -18,13 +18,13 @@ function App() {
     const [zoom, setZoom] = useState(getSafe(() => {
         const z = window.localStorage.getItem(ZOOM_LOCAL_KEY);
         if (z)
-            return parseInt(z)
+            return parseFloat(z)
         throw ""
     }, 1.8));
     const [mgZoom, setMgZoom] = useState(getSafe(() => {
         const z = window.localStorage.getItem(MG_ZOOM_LOCAL_KEY);
         if (z)
-            return parseInt(z)
+            return parseFloat(z)
         throw ""
     }, 150));
     const [mgShape, setMgShape] = useState(getSafe(() => {
@@ -78,7 +78,7 @@ function App() {
                             onClick={() => {
                                 const newShape = mgShape === "circle" ? "square" : "circle"
                                 setMgShape(newShape)
-                                window.localStorage.setItem(ZOOM_LOCAL_KEY, newShape);
+                                window.localStorage.setItem(MG_SHAPE_LOCAL_KEY, newShape);
                             }} style={{
                             backgroundColor: teal[300],
                         }}>
@@ -173,6 +173,7 @@ function Images({files, mgZoom, mgShape, zoom}) {
                 sizes.map(size => (
                     <Box key={size} mt={2} flexDirectionColumn={true}>
                         <Magnifier
+                            className={`glass-${mgShape}`}
                             mgWidth={mgZoom < mgZooms[0] ? mgZooms[0] : mgZoom}
                             mgHeight={mgZoom < mgZooms[0] ? mgZooms[0] : mgZoom}
                             mgShape={mgShape}

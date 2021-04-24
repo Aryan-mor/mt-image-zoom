@@ -114,3 +114,9 @@
   color: #ff6e40;
   box-shadow: 0 0 13px 3px #ff6e40;
 }
+
+
+.glass-square .magnifying-glass{
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
