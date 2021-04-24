@@ -7,9 +7,7 @@ import {Fab, useTheme, Zoom} from "@material-ui/core";
 import {Delete, ImageSearch} from "@material-ui/icons";
 import Magnifier from "react-magnifier";
 
-
 const ZOOM_LOCAL_KEY = "zoom-local-storage"
-const SRC_LOCAL_KEY = "src-local-storage"
 
 function App() {
     const theme = useTheme()
