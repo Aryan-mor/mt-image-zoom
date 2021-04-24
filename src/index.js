@@ -3,12 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {StylesProvider, ThemeProvider} from "@material-ui/styles";
+import {ThemeProvider} from "@material-ui/styles";
 import {createMuiTheme, CssBaseline, MuiThemeProvider} from "@material-ui/core";
 
-
 const theme = createMuiTheme()
-
 
 ReactDOM.render(
     <React.StrictMode>

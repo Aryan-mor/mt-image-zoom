@@ -2,14 +2,13 @@ import React, {useEffect, useRef} from "react";
 import {FileDrop} from 'react-file-drop';
 import {Box, Button, Dialog, getSafe, gLog, Tooltip, Typography, useState} from "material-ui-helper";
 import './App.css';
-import {cyan, grey, red} from "@material-ui/core/colors";
+import {cyan, grey, red,orange} from "@material-ui/core/colors";
 import {Fab, useTheme, Zoom} from "@material-ui/core";
-import {Delete, ImageSearch} from "@material-ui/icons";
+import {Delete, ImageSearch,Search} from "@material-ui/icons";
 import Magnifier from "react-magnifier";
 
-
 const ZOOM_LOCAL_KEY = "zoom-local-storage"
-const SRC_LOCAL_KEY = "src-local-storage"
+const MG_ZOOM_LOCAL_KEY = "mg-zoom-local-storage"
 
 function App() {
     const theme = useTheme()
@@ -21,6 +20,12 @@ function App() {
             return parseInt(z)
         throw ""
     }, 1.8));
+    const [mgZoom, setMgZoom] = useState(getSafe(() => {
+        const z = window.localStorage.getItem(MG_ZOOM_LOCAL_KEY);
+        if (z)
+            return parseInt(z)
+        throw ""
+    }, 150));
     const fileInputRef = useRef(null);
     const onFileChange = (files) => {
         gLog("onFileChange ", files)
@@ -60,6 +65,7 @@ function App() {
                     right: theme.spacing(2),
                     bottom: theme.spacing(2)
                 }}>
+                    <ChangeMgZoom mgZoom={mgZoom} onChange={setMgZoom}/>
                     <ChangeZoom zoom={zoom} onChange={setZoom}/>
                     <Zoom
                         in={Boolean(files)}
@@ -83,7 +89,7 @@ function App() {
                     onChange={(event) => {
                         onFileChange(event.target.files);
                     }}/>
-                <Images zoom={zoom} files={files}/>
+                <Images zoom={zoom} mgZoom={mgZoom} files={files}/>
             </Box>
             <FileDrop
                 onFrameDragEnter={(event) => console.log('onFrameDragEnter', event)}
@@ -107,7 +113,7 @@ function App() {
 
 const sizes = ["50%", "100%", 300, 800, 1200, undefined]
 
-function Images({files, zoom}) {
+function Images({files,mgZoom, zoom}) {
     const [src, setSrc] = useState()
 
     useEffect(() => {
@@ -131,7 +137,6 @@ function Images({files, zoom}) {
             //     console.log(el);
             // }
         } catch (e) {
-            gLog("asdfkasfkjas", e)
         }
     }, [files])
 
@@ -143,7 +148,10 @@ function Images({files, zoom}) {
             {
                 sizes.map(size => (
                     <Box key={size} mt={2} flexDirectionColumn={true}>
-                        <Magnifier zoomFactor={zoom} src={src} width={size}/>
+                        <Magnifier
+                            mgWidth={mgZoom}
+                            mgHeight={mgZoom}
+                            zoomFactor={zoom} src={src} width={size}/>
                         <Typography pt={0.5} variant={"h6"}>
                             {size}
                         </Typography>
@@ -211,6 +219,71 @@ function ChangeZoom({zoom, onChange}) {
                                                 setOpen(false)
                                                 onChange(it)
                                                 window.localStorage.setItem(ZOOM_LOCAL_KEY, it.toString());
+                                            }}>
+                                        <Typography variant={"h6"} color={active ? "#fff" : "#000"}>
+                                            {it}
+                                        </Typography>
+                                    </Button>
+                                </Box>
+                            )
+                        })
+                    }
+                </Box>
+            </Dialog>
+        </React.Fragment>
+    )
+}
+
+const mgSize = [
+    50,
+    100,
+    150,
+    200,
+    250,
+    300,
+    350,
+    400,
+    450,
+    500,
+]
+
+function ChangeMgZoom({mgZoom, onChange}) {
+    const theme = useTheme()
+    const [open, setOpen] = useState(false)
+
+    return (
+        <React.Fragment>
+            <Tooltip title={"Change Magnifying Zoom"}>
+                <Fab onClick={() => setOpen(true)}
+                     style={{
+                         backgroundColor: orange[300],
+                         marginTop: theme.spacing(1),
+                         marginBottom: theme.spacing(1),
+                     }}>
+                    <Box flexDirectionColumn={true} style={{color: "#fff"}}>
+                        <Search style={{color: "#fff"}}/>
+                        {mgZoom}
+                    </Box>
+                </Fab>
+            </Tooltip>
+            <Dialog maxWidth={"md"} open={open} onClose={() => setOpen(false)}>
+                <Box width={1} flexWrap={"wrap"}>
+                    <Box width={1} py={2} px={1}>
+                        <Typography variant={"h5"}>
+                            Change zoom:
+                        </Typography>
+                    </Box>
+                    {
+                        mgSize.map(it => {
+                            const active = mgZoom === it
+                            return (
+                                <Box p={1} key={it}>
+                                    <Button variant={active ? undefined : "outlined"}
+                                            color={active ? cyan[400] : grey[500]}
+                                            onClick={() => {
+                                                setOpen(false)
+                                                onChange(it)
+                                                window.localStorage.setItem(MG_ZOOM_LOCAL_KEY, it.toString());
                                             }}>
                                         <Typography variant={"h6"} color={active ? "#fff" : "#000"}>
                                             {it}
